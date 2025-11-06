@@ -66,3 +66,9 @@ variable "subnet_ids" {
   description = "List of Subnet IDs for the EKS cluster"
   type        = list(string)
 }
+
+variable "before_compute_eks_metrics_server" {
+  description = "Configuration for before_compute of metrics-server addon"
+  type        = bool
+  default     = true
+}

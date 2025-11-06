@@ -14,6 +14,10 @@ addons = {
     vpc-cni                = {
       before_compute = var.before_compute_eks_vpc_cni
     }
+    metrics-server        = {
+      enabled = true
+      before_compute = var.before_compute_eks_metrics_server
+    }
   }
  endpoint_public_access = var.endpoint_public_access
  enable_cluster_creator_admin_permissions = var.enable_cluster_creator_admin_permissions
