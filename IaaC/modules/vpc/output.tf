@@ -1,13 +1,13 @@
-output "name" {
+output "vpc_name" {
   value = module.vpc.name
 }
 
-output "id" {
-  value = module.vpc.id
+output "vpc_id" {
+  value = module.vpc.vpc_id
 }
 
-output "cidr" {
-  value = module.vpc.cidr
+output "vpc_cidr" {
+  value = module.vpc.vpc_cidr_block
 }
 
 output "azs" {
@@ -20,12 +20,4 @@ output "private_subnets" {
 
 output "public_subnets" {
   value = module.vpc.public_subnets
-}
-
-output "enable_nat_gateway" {
-  value = module.vpc.enable_nat_gateway
-}
-
-output "enable_vpn_gateway" {
-  value = module.vpc.enable_vpn_gateway
 }
