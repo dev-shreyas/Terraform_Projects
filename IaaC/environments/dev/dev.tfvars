@@ -1,1 +1,5 @@
 region = "us-east-1"
+env = "dev"
+repository_name = "dev-app-repo"
+repository_image_tag_mutability = "MUTABLE"
+repository_encryption_type = "AES256"

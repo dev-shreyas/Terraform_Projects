@@ -13,6 +13,16 @@ module "vpc" {
   vpc_public_subnets    = [for i in range(length(local.azs)) : cidrsubnet("10.0.192.0/24", 2,i)]
 }
 
+module "ecr" {
+  source = "../../modules/ecr"
+
+  # Pass concrete values here; avoid referencing module.ecr.* (self-reference) which causes a cycle.
+  env                             = "dev"
+  repository_image_tag_mutability = "MUTABLE"
+  repository_encryption_type      = "AES256"
+}
+
+
 module "eks" {
   source = "../../modules/eks"
   cluster_name          = "dev-eks-cluster"
