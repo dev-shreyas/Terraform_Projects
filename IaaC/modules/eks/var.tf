@@ -72,3 +72,9 @@ variable "before_compute_eks_metrics_server" {
   type        = bool
   default     = true
 }
+
+variable "before_compute_eks_external_dns" {
+  description = "Configuration for before_compute of external-dns addon"
+  type        = bool
+  default     = true
+}

@@ -18,6 +18,10 @@ addons = {
       enabled = true
       before_compute = var.before_compute_eks_metrics_server
     }
+    external-dns          = {
+      enabled = true
+      before_compute = var.before_compute_eks_external_dns
+    }
   }
  endpoint_public_access = var.endpoint_public_access
  enable_cluster_creator_admin_permissions = var.enable_cluster_creator_admin_permissions
