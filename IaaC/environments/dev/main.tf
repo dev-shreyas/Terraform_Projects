@@ -1,33 +1,41 @@
-locals {
-  azs = ["us-east-1a", "us-east-1d", "us-east-1f"]
-}
+  locals {
+    azs = ["us-east-1a", "us-east-1d", "us-east-1f"]
+  }
 
-module "vpc" {
-  source                = "../../modules/vpc"
-  vpc_name              = "dev-vpc"
-  vpc_cidr              = "10.0.0.0/16"
-  # Ensure the number of AZs matches the number of subnets provided (3)
-  # Avoid AZs unsupported by EKS control plane (us-east-1e). Use allowed AZs instead.
-  vpc_azs               = local.azs
-  vpc_private_subnets   = [for i in range(length(local.azs)) : cidrsubnet("10.0.0.0/16", 2, i)]
-  vpc_public_subnets    = [for i in range(length(local.azs)) : cidrsubnet("10.0.192.0/24", 2,i)]
-}
+  module "vpc" {
+    source                = "../../modules/vpc"
+    vpc_name              = "dev-vpc"
+    vpc_cidr              = "10.0.0.0/16"
+    # Ensure the number of AZs matches the number of subnets provided (3)
+    # Avoid AZs unsupported by EKS control plane (us-east-1e). Use allowed AZs instead.
+    vpc_azs               = local.azs
+    vpc_private_subnets   = [for i in range(length(local.azs)) : cidrsubnet("10.0.0.0/16", 2, i)]
+    vpc_public_subnets    = [for i in range(length(local.azs)) : cidrsubnet("10.0.192.0/24", 2,i)]
+  }
 
-module "ecr" {
-  source = "../../modules/ecr"
+  module "ecr" {
+    source = "../../modules/ecr"
 
-  # Pass concrete values here; avoid referencing module.ecr.* (self-reference) which causes a cycle.
-  env                             = "dev"
-  repository_image_tag_mutability = "MUTABLE"
-  repository_encryption_type      = "AES256"
-}
+    # Pass concrete values here; avoid referencing module.ecr.* (self-reference) which causes a cycle.
+    env                             = "dev"
+    repository_image_tag_mutability = "MUTABLE"
+    repository_encryption_type      = "AES256"
+  }
+
+  module "acm" {
+    source = "../../modules/acm"
+    domain_name       = var.domain_name
+  cloudflare_zone_id  = var.cloudflare_zone_id
+  cloudflare_api_token = var.cloudflare_api_token
+    env               = "dev"
+  }
 
 
-module "eks" {
-  source = "../../modules/eks"
-  cluster_name          = "dev-eks-cluster"
-  kubernetes_version    = "1.34"
-  vpc_ids                = [module.vpc.vpc_id]
-  subnet_ids            = module.vpc.private_subnets
-  environment           = "dev"
-}
+  module "eks" {
+    source = "../../modules/eks"
+    cluster_name          = "dev-eks-cluster"
+    kubernetes_version    = "1.34"
+    vpc_ids                = [module.vpc.vpc_id]
+    subnet_ids            = module.vpc.private_subnets
+    environment           = "dev"
+  }

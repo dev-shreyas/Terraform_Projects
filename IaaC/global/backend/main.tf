@@ -6,11 +6,6 @@ resource "aws_s3_bucket" "terraform_state" {
   bucket = var.bucket_name
 }
 
-# resource "aws_s3_bucket_acl" "s3_acl" {
-#     bucket = aws_s3_bucket.terraform_state.id
-#     acl    = "private"
-# }
-
 resource "aws_s3_bucket_versioning" "s3_versioning" {
     bucket = aws_s3_bucket.terraform_state.id
     versioning_configuration {
